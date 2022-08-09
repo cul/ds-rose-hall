@@ -59,40 +59,21 @@ for column in ["age1820", "age1823", "age1826", "age1829", "age1832", "age1832Li
   df[column] = pd.Series(df[column], dtype="string")
   df[column] = df[column].fillna("")
 
-# Cell 3
+# Convert columns expected to be string values into stripped strings
 for column in ["name", "country", "colour", "gender", "duties", "displayName", "profile"]:
-  df[column] = df[column].str.strip()
-
-# Cell 4
-def genderNan(x):
-  if x is nan:
-    return "Unknown"
-  else:
-    return x
-
-df["gender"] = df["gender"].apply(genderNan)
+  df[column] = "Unknown" if df[column] is nan else df[column].str.strip()
 
 # Cell 5
-def countryNan(x):
-  if x == "Creole/African?":
-    return "Inconsistent"
-  elif x is nan:
-    return "Unknown"
-  else:
-    return x
+def countryInconsistent(x):
+  return "Inconsistent" if x == "Creole/African?" else x
 
-df["country"] = df["country"].apply(countryNan)
+df["country"] = df["country"].apply(countryInconsistent)
 
 # Cell 6
-def colourNan(x):
-  if x == "Negro/Sambo?" or x == "Sambo/Mulatto?":
-    return "Inconsistent"
-  elif x is nan:
-    return "Unknown"
-  else:
-    return x
+def colourInconsistent(x):
+  return "Inconsistent" if (x == "Negro/Sambo?" or x == "Sambo/Mulatto?") else x
 
-df["colour"] = df["colour"].apply(colourNan)
+df["colour"] = df["colour"].apply(colourInconsistent)
 
 # Cell 7
 duties_dictionary = {'At Palmyra': "Craft Workers",
